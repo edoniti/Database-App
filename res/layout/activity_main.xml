@@ -3,12 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
+    <EditText 
+        android:id="@+id/editTekst"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/hello_world"
-        tools:context=".MainActivity" />
+        android:hint="Shkruje tekstin"
+        />
+
+    <Button
+        android:id="@+id/butoni"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTekst"
+        android:text="Shto"
+        />
+    
+     <ListView
+		android:id="@id/android:list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" 
+        android:focusable="true"
+		android:clickable="true"
+		android:cacheColorHint="#00000000"
+		android:layout_below="@id/butoni"
+		android:drawSelectorOnTop="false">
+	</ListView>
 
 </RelativeLayout>

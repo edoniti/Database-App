@@ -1,19 +1,28 @@
 package com.milot.example.database.example;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
-import android.app.Activity;
+import android.app.ListActivity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ListActivity implements OnClickListener {
 	
+	List<String> lista = new ArrayList<String>();
 	Databaza db;
-	
+	EditText editTekst;
+	Button butoni;
+	SQLiteDatabase d;
+	ArrayAdapter<String> adapteri;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -21,24 +30,30 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         
         db = new Databaza(this);
-        SQLiteDatabase d = db.getReadableDatabase();
+        d = db.getReadableDatabase();
         
-        Cursor c = d.rawQuery("SELECT name FROM tblPerson", null);
+        butoni = (Button) findViewById(R.id.butoni);
+        editTekst = (EditText) findViewById(R.id.editTekst);
         
-        ContentValues cv = new ContentValues();
-        cv.put("name", "Miloti");
+        butoni.setOnClickListener(this);
         
-        //d.insert("tblPerson", "", cv);
-        //d.delete("tblPerson", "name = 'Miloti'", null);
-        
+        refreshData();
+
+        adapteri = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lista);
+        setListAdapter(adapteri);
+    }
+    
+    private void refreshData()
+    {
+    	lista.clear();
+    	Cursor c = d.rawQuery("SELECT name FROM tblPerson", null);
         c.moveToFirst();
-        
-        while (!c.isAfterLast()) {
-        		Log.e("A", c.getString(0));
-        		c.moveToNext();
+        while(!c.isAfterLast())
+        {
+        	lista.add(c.getString(0));
+        	c.moveToNext();
         }
-        
-        
+                
     }
 
     @Override
@@ -46,4 +61,15 @@ public class MainActivity extends Activity {
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
+
+	public void onClick(View v) {
+		if(v == butoni)
+		{
+	        ContentValues cv = new ContentValues();
+	        cv.put("name", editTekst.getText().toString());
+	        d.insert("tblPerson", "", cv);
+	        refreshData();
+	        adapteri.notifyDataSetChanged();
+		}
+	}
 }
